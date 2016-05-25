@@ -7,10 +7,10 @@ extern "C"
 #include "Test_BitManip.h"
 #include "CppUTest/TestHarness.h"
 
-TEST_GROUP(BitManip)
-{
-    uint8_t eightBit;
+static uint8_t eightBit;
 
+TEST_GROUP(SetBits)
+{
     void setup()
     {
         eightBit = 0;
@@ -21,33 +21,67 @@ TEST_GROUP(BitManip)
     }
 };
 
-TEST(BitManip, ItCanSetAllBitsInABitmask)
+TEST(SetBits, ItCanSetAllBitsInABitmask)
 {
     SET_BITS(eightBit, 0xff);
     BYTES_EQUAL(0xff, eightBit);
 }
 
-TEST(BitManip, ItDoesNotClearAnyBitsInABitmask)
+TEST(SetBits, ItDoesNotClearAnyBitsInABitmask)
 {
     eightBit = 0xff;
     SET_BITS(eightBit, 0x00);
     BYTES_EQUAL(0xff, eightBit);
 }
 
-TEST(BitManip, ItCanSetTheLeastSignificantBit)
+TEST(SetBits, ItCanSetTheLeastSignificantBit)
 {
     SET_BITS( eightBit, (1<<0) );
     BYTES_EQUAL(0x01, eightBit);
 }
 
-TEST(BitManip, ItCanSetTheMostSignificantBit)
+TEST(SetBits, ItCanSetTheMostSignificantBit)
 {
     SET_BITS( eightBit, (1<<7) );
     BYTES_EQUAL(0x80, eightBit);
 }
 
-// IGNORE_TEST(BitManip, ThereIsNoProtectionForThis)
+// IGNORE_TEST(SetBits, ThereIsNoProtectionForThis)
 // {
     // SET_BITS( eightBit, (1<<8) );
     // BYTES_EQUAL(0x00, eightBit);
 // }
+
+
+
+TEST_GROUP(RightMostBit)
+{
+    void setup()
+    {
+        eightBit = 0;
+    }
+
+    void teardown()
+    {
+    }
+};
+
+TEST(RightMostBit, ItReturnsZeroIfNoBitsAreSet)
+{
+    BYTES_EQUAL( 0, RIGHTMOST_BIT_NUMBER(0x00) );
+}
+
+TEST(RightMostBit, ItReturnsTheLeastSignificantBit)
+{
+    BYTES_EQUAL( 0, RIGHTMOST_BIT_NUMBER(0x01) );
+}
+
+TEST(RightMostBit, ItReturnsTheMostSignificantBit)
+{
+    BYTES_EQUAL( 7, RIGHTMOST_BIT_NUMBER(0x80) );
+}
+
+TEST(RightMostBit, ItReturnsTheRightMostBitIfSeveralBitsAreSet)
+{
+    BYTES_EQUAL( 3, RIGHTMOST_BIT_NUMBER(0xF8) );
+}
