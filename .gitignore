@@ -1,0 +1,7 @@
+# Ignore vim swap files
+*.swp
+*.swo
+
+# Ignore build directories
+obj/
+build/
