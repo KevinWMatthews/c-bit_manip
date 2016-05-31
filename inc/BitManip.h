@@ -17,6 +17,13 @@
 // A wrapper for the standard bitwise operation.
 #define BITWISE_AND(bitmask1, bitmask2) ((bitmask1) & (bitmask2))
 
+// Set desired bits in a bitmask.
+// For example, to set bits 5 and 6 in the bitmask range 0xF0, let:
+//   bitsToSet = 0x06 (0b0110)
+//   bitmaskRange = (1<<7) | (1<<6) | (1<<5) | (1<<4)
+// The macro will take bitsToSet and shift it so that it lines up with the bitmaskRange.
+#define SHIFT_BITMASK(bitsToSet, bitmaskRange) ( (bitsToSet) << RIGHTMOST_BIT_NUMBER(bitmaskRange) )
+
 
 
 //Check if a single bit is set, given by a bitmask.

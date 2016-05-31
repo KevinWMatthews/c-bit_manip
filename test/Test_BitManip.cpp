@@ -192,3 +192,54 @@ TEST(RightMostBit, ItReturnsTheRightMostBitIfSeveralBitsAreSet)
 {
     BYTES_EQUAL( 3, RIGHTMOST_BIT_NUMBER(0xF8) );
 }
+
+
+
+TEST_GROUP(ShiftBitmask)
+{
+    uint8_t bitsToSet;
+    uint8_t bitmaskRange;
+
+    void setup()
+    {
+        bitsToSet = 0;
+        bitmaskRange = 0;
+    }
+
+    void teardown()
+    {
+    }
+};
+
+TEST(ShiftBitmask, ItCanHandleZeroBitmask)
+{
+    BYTES_EQUAL( 0x00, SHIFT_BITMASK(bitsToSet, bitmaskRange) );
+}
+
+TEST(ShiftBitmask, ItCanShiftToMinimum)
+{
+    bitsToSet = 0x01;
+    bitmaskRange = 0x01;
+    BYTES_EQUAL( 0x01, SHIFT_BITMASK(bitsToSet, bitmaskRange) );
+}
+
+TEST(ShiftBitmask, ItCanShiftToMaximum)
+{
+    bitsToSet = 0x01;
+    bitmaskRange = 0x80;
+    BYTES_EQUAL( 0x80, SHIFT_BITMASK(bitsToSet, bitmaskRange) );
+}
+
+TEST(ShiftBitmask, ItCanShiftSeveralBits)
+{
+    bitsToSet = 0x03;
+    bitmaskRange = 0x30;
+    BYTES_EQUAL( 0x30, SHIFT_BITMASK(bitsToSet, bitmaskRange) );
+}
+
+TEST(ShiftBitmask, ItCanShiftSomeBits)
+{
+    bitsToSet = 0x06;
+    bitmaskRange = 0xf0;
+    BYTES_EQUAL( 0x60, SHIFT_BITMASK(bitsToSet, bitmaskRange) );
+}
