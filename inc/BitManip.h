@@ -3,8 +3,17 @@
 
 
 
-//Multi-statement macros cannot be rvalues or be placed within parenthesis!!
-//Bit numbers are zero-indexed.
+// Multi-statement macros cannot be rvalues or be placed within parenthesis!!
+// Bit numbers are zero-indexed.
+
+// Set one or several bits given by a bitmask.
+// This macro will not clear bits.
+#define SET_BITS(variable, bitmask) ((variable) |= (bitmask))
+
+// Clear one or several bits given by a bitmask.
+// This macro will not set bits
+#define CLEAR_BITS(variable, bitmask) ((variable) &= ~(bitmask))
+
 
 
 //Check if a single bit is set, given by a bitmask.
@@ -19,10 +28,6 @@
 #define IF_BITMASK(expectedBitmask, actualBitmask, bitsToCheck) \
   ( ((bitsToCheck) != 0) && \
     (BITWISE_AND(expectedBitmask, bitsToCheck) == BITWISE_AND(actualBitmask, bitsToCheck)) )
-
-//Set a single or several bits given by a bitmask.
-//This macro will not clear bits.
-#define SET_BITS(variable, bits) ((variable) |= (bits))
 
 //Set a single bit given by a bit number.
 //This macro will not clear bits.
@@ -46,8 +51,6 @@
   SET_BITS(variable, BITWISE_AND((newValue) << RIGHTMOST_BIT_NUMBER(bitsToSet), bitsToSet)); \
 }
 
-//Clear a single or several bits given by a bitmask
-#define CLEAR_BITS(variable, bits) ((variable) &= ~(bits))
 
 //Clear a single bit given by a bit number
 #define CLEAR_BIT_NUMBER(variable, bitNumber) ((variable) &= ~(1<<(bitNumber)))
