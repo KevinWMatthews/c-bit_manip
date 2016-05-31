@@ -106,6 +106,59 @@ TEST(ClearBits, ItCanClearTheMostSignificantBit)
 
 
 
+TEST_GROUP(BitwiseAnd)
+{
+    uint8_t bitmask1;
+    uint8_t bitmask2;
+
+    void setup()
+    {
+        bitmask1 = 0;
+        bitmask2 = 0;
+    }
+
+    void teardown()
+    {
+    }
+};
+
+TEST(BitwiseAnd, OfHexZeroAndZeroReturnsZero)
+{
+    BYTES_EQUAL( 0x00, BITWISE_AND(bitmask1, bitmask2) );
+}
+
+TEST(BitwiseAnd, SetMatchingBits)
+{
+    bitmask1 = 0xff;
+    bitmask2 = 0xff;
+
+    BYTES_EQUAL( 0xff, BITWISE_AND(bitmask1, bitmask2) );
+}
+
+TEST(BitwiseAnd, ClearsUnmatchingBits)
+{
+    bitmask1 = 0x00;
+    bitmask2 = 0xff;
+    BYTES_EQUAL( 0x00, BITWISE_AND(bitmask1, bitmask2) );
+
+    bitmask1 = 0xff;
+    bitmask2 = 0x00;
+    BYTES_EQUAL( 0x00, BITWISE_AND(bitmask1, bitmask2) );
+}
+
+TEST(BitwiseAnd, SetAndClearsBits)
+{
+    bitmask1 = 0xff;
+    bitmask2 = 0xa5;
+    BYTES_EQUAL( 0xa5, BITWISE_AND(bitmask1, bitmask2) );
+
+    bitmask1 = 0xa5;
+    bitmask2 = 0xff;
+    BYTES_EQUAL( 0xa5, BITWISE_AND(bitmask1, bitmask2) );
+}
+
+
+
 TEST_GROUP(RightMostBit)
 {
     uint8_t eightBit;

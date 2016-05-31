@@ -14,6 +14,9 @@
 // This macro will not set bits
 #define CLEAR_BITS(variable, bitmask) ((variable) &= ~(bitmask))
 
+// A wrapper for the standard bitwise operation.
+#define BITWISE_AND(bitmask1, bitmask2) ((bitmask1) & (bitmask2))
+
 
 
 //Check if a single bit is set, given by a bitmask.
@@ -54,11 +57,6 @@
 
 //Clear a single bit given by a bit number
 #define CLEAR_BIT_NUMBER(variable, bitNumber) ((variable) &= ~(1<<(bitNumber)))
-
-
-
-//Helper macros
-#define BITWISE_AND(bitmask1, bitmask2) ((bitmask1) & (bitmask2))
 
 //This is GCC specific!
 //The compiler's return value is 1-indexed.
