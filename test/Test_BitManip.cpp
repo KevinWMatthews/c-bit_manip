@@ -120,15 +120,15 @@ TEST(ClearBitmask, ItCanClearTheMostSignificantBit)
 
 
 
-TEST_GROUP(BitwiseAnd)
+TEST_GROUP(FilterBitmask)
 {
-    uint8_t bitmask1;
-    uint8_t bitmask2;
+    uint8_t bitmask;
+    uint8_t filter;
 
     void setup()
     {
-        bitmask1 = 0;
-        bitmask2 = 0;
+        bitmask = 0;
+        filter = 0;
     }
 
     void teardown()
@@ -136,39 +136,39 @@ TEST_GROUP(BitwiseAnd)
     }
 };
 
-TEST(BitwiseAnd, OfHexZeroAndZeroReturnsZero)
+TEST(FilterBitmask, OfHexZeroAndZeroReturnsZero)
 {
-    BYTES_EQUAL( 0x00, BITWISE_AND(bitmask1, bitmask2) );
+    BYTES_EQUAL( 0x00, FILTER_BITMASK(bitmask, filter) );
 }
 
-TEST(BitwiseAnd, SetMatchingBits)
+TEST(FilterBitmask, SetMatchingBits)
 {
-    bitmask1 = 0xff;
-    bitmask2 = 0xff;
+    bitmask = 0xff;
+    filter = 0xff;
 
-    BYTES_EQUAL( 0xff, BITWISE_AND(bitmask1, bitmask2) );
+    BYTES_EQUAL( 0xff, FILTER_BITMASK(bitmask, filter) );
 }
 
-TEST(BitwiseAnd, ClearsUnmatchingBits)
+TEST(FilterBitmask, ClearsUnmatchingBits)
 {
-    bitmask1 = 0x00;
-    bitmask2 = 0xff;
-    BYTES_EQUAL( 0x00, BITWISE_AND(bitmask1, bitmask2) );
+    bitmask = 0xff;
+    filter = 0x00;
+    BYTES_EQUAL( 0x00, FILTER_BITMASK(bitmask, filter) );
 
-    bitmask1 = 0xff;
-    bitmask2 = 0x00;
-    BYTES_EQUAL( 0x00, BITWISE_AND(bitmask1, bitmask2) );
+    bitmask = 0x00;
+    filter = 0xff;
+    BYTES_EQUAL( 0x00, FILTER_BITMASK(bitmask, filter) );
 }
 
-TEST(BitwiseAnd, SetAndClearsBits)
+TEST(FilterBitmask, SetAndClearsBits)
 {
-    bitmask1 = 0xff;
-    bitmask2 = 0xa5;
-    BYTES_EQUAL( 0xa5, BITWISE_AND(bitmask1, bitmask2) );
+    bitmask = 0xa5;
+    filter = 0xff;
+    BYTES_EQUAL( 0xa5, FILTER_BITMASK(bitmask, filter) );
 
-    bitmask1 = 0xa5;
-    bitmask2 = 0xff;
-    BYTES_EQUAL( 0xa5, BITWISE_AND(bitmask1, bitmask2) );
+    bitmask = 0xff;
+    filter = 0xa5;
+    BYTES_EQUAL( 0xa5, FILTER_BITMASK(bitmask, filter) );
 }
 
 

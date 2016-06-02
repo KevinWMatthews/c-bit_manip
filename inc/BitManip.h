@@ -14,8 +14,11 @@
 // This macro will not set bits
 #define CLEAR_BITMASK(variable, bitmask) ((variable) &= ~(bitmask))
 
-// A wrapper for the standard bitwise operation.
-#define BITWISE_AND(bitmask1, bitmask2) ((bitmask1) & (bitmask2))
+// A wrapper for the standard bitwise and operation.
+// Filter out/unset bits that don't belong in a bitmask.
+// The filter and bitmask are actually interchangeable.
+// I'm experimenting with this macro name to see if it improves readability.
+#define FILTER_BITMASK(bitmask, filter) ((bitmask) & (filter))
 
 // Set desired bits in a bitmask.
 // For example, to set bits 5 and 6 in the bitmask range 0xF0, let:
@@ -33,23 +36,23 @@
 // This is not a function so that we can avoid providing a specific data type for the arguments.
 #define SHIFT_AND_SET_BITMASK(variable, bitsToSet, bitmaskRange) \
     ( SET_BITMASK(variable, \
-                BITWISE_AND(bitmaskRange, \
-                    SHIFT_BITMASK(bitsToSet, bitmaskRange))) )
+                FILTER_BITMASK(\
+                    SHIFT_BITMASK(bitsToSet, bitmaskRange), bitmaskRange)) )
 
 
 
 //Check if a single bit is set, given by a bitmask.
 //To check multiple bits, use IF_BITMASK.
 //Evaluates to 1 if true and 0 if false.
-#define IF_BIT(variable, bit) (1 && BITWISE_AND(variable, bit))
+#define IF_BIT(variable, bit) (1 && FILTER_BITMASK(variable, bit))
 
 //Check if a signel bit is set, given by a bit number.
-#define IF_BIT_NUMBER(variable, bitNumber) (1 && BITWISE_AND(1<<(bitNumber), variable))
+#define IF_BIT_NUMBER(variable, bitNumber) (1 && FILTER_BITMASK(1<<(bitNumber), variable))
 
 //Compare sections of two bitmasks.
 #define IF_BITMASK(expectedBitmask, actualBitmask, bitsToCheck) \
   ( ((bitsToCheck) != 0) && \
-    (BITWISE_AND(expectedBitmask, bitsToCheck) == BITWISE_AND(actualBitmask, bitsToCheck)) )
+    (FILTER_BITMASK(expectedBitmask, bitsToCheck) == FILTER_BITMASK(actualBitmask, bitsToCheck)) )
 
 //Set a single bit given by a bit number.
 //This macro will not clear bits.
@@ -59,7 +62,7 @@
 #define SET_BITMASK_TO(variable, newValue, bitsToSet) \
 { \
   CLEAR_BITMASK(variable, bitsToSet); \
-  SET_BITMASK(variable, BITWISE_AND(newValue, bitsToSet)); \
+  SET_BITMASK(variable, FILTER_BITMASK(newValue, bitsToSet)); \
 }
 
 //Set and clear bits in variable so they match the new value
@@ -70,7 +73,7 @@
 #define SHIFT_AND_SET_BITMASK_TO(variable, newValue, bitsToSet) \
 { \
   CLEAR_BITMASK(variable, bitsToSet); \
-  SET_BITMASK(variable, BITWISE_AND((newValue) << RIGHTMOST_BIT_NUMBER(bitsToSet), bitsToSet)); \
+  SET_BITMASK(variable, FILTER_BITMASK((newValue) << RIGHTMOST_BIT_NUMBER(bitsToSet), bitsToSet)); \
 }
 
 
