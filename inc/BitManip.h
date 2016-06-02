@@ -12,7 +12,7 @@
 
 // Clear one or several bits given by a bitmask.
 // This macro will not set bits
-#define CLEAR_BITS(variable, bitmask) ((variable) &= ~(bitmask))
+#define CLEAR_BITMASK(variable, bitmask) ((variable) &= ~(bitmask))
 
 // A wrapper for the standard bitwise operation.
 #define BITWISE_AND(bitmask1, bitmask2) ((bitmask1) & (bitmask2))
@@ -58,7 +58,7 @@
 //Set and clear bits in variable so they match the new value
 #define SET_BITMASK_TO(variable, newValue, bitsToSet) \
 { \
-  CLEAR_BITS(variable, bitsToSet); \
+  CLEAR_BITMASK(variable, bitsToSet); \
   SET_BITMASK(variable, BITWISE_AND(newValue, bitsToSet)); \
 }
 
@@ -69,7 +69,7 @@
 //Bitmask must be of consecutive bits!
 #define SHIFT_AND_SET_BITMASK_TO(variable, newValue, bitsToSet) \
 { \
-  CLEAR_BITS(variable, bitsToSet); \
+  CLEAR_BITMASK(variable, bitsToSet); \
   SET_BITMASK(variable, BITWISE_AND((newValue) << RIGHTMOST_BIT_NUMBER(bitsToSet), bitsToSet)); \
 }
 

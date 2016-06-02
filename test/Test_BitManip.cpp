@@ -73,7 +73,7 @@ TEST(SetBitmask, ItCanSetTheMostSignificantBit)
 
 
 
-TEST_GROUP(ClearBits)
+TEST_GROUP(ClearBitmask)
 {
     uint8_t eightBit;
 
@@ -87,34 +87,34 @@ TEST_GROUP(ClearBits)
     }
 };
 
-TEST(ClearBits, ItCanClearAllBits)
+TEST(ClearBitmask, ItCanClearAllBits)
 {
-    CLEAR_BITS(eightBit, EIGHT_BITS);
+    CLEAR_BITMASK(eightBit, EIGHT_BITS);
     BYTES_EQUAL(0x00, eightBit);
 }
 
-TEST(ClearBits, ItWillNotSetAnyBits)
+TEST(ClearBitmask, ItWillNotSetAnyBits)
 {
     eightBit = 0;
-    CLEAR_BITS(eightBit, EIGHT_BITS);
+    CLEAR_BITMASK(eightBit, EIGHT_BITS);
     BYTES_EQUAL(0x00, eightBit);
 }
 
-TEST(ClearBits, ItCanClearTheLeastSignificantBit)
+TEST(ClearBitmask, ItCanClearTheLeastSignificantBit)
 {
-    CLEAR_BITS(eightBit, (1<<0));
+    CLEAR_BITMASK(eightBit, (1<<0));
     BYTES_EQUAL(0xfe, eightBit);
 }
 
-TEST(ClearBits, ItCanClearTheMostSignificantBit)
+TEST(ClearBitmask, ItCanClearTheMostSignificantBit)
 {
-    CLEAR_BITS(eightBit, (1<<7));
+    CLEAR_BITMASK(eightBit, (1<<7));
     BYTES_EQUAL(0x7f, eightBit);
 }
 
 // IGNORE_TEST(SetBitmask, ThereIsNoProtectionForThis)
 // {
-//     CLEAR_BITS( eightBit, (1<<8) );
+//     CLEAR_BITMASK( eightBit, (1<<8) );
 //     BYTES_EQUAL(0xff, eightBit);
 // }
 
