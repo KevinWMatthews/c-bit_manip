@@ -10,6 +10,20 @@ extern "C"
 
 #define EIGHT_BITS (1<<7) | (1<<6) | (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<1) | (1<<0)
 
+// This is an experiment to help make it easier to figure out bit shifts.
+// It looks crazy at first but it's nice when you get used to it.
+#define B0000_0000 0x00
+#define B0000_0001 0x01
+#define B0000_0011 0x03
+#define B0000_1001 0x09
+#define B0001_1000 0x18
+#define B0011_0000 0x30
+#define B1000_0000 0x80
+#define B1000_0001 0x81
+#define B1001_0000 0x90
+#define B1001_1001 0x99
+#define B1111_0000 0xf0
+
 
 
 TEST_GROUP(SetBits)
@@ -242,4 +256,92 @@ TEST(ShiftBitmask, ItCanShiftSomeBits)
     bitsToSet = 0x06;
     bitmaskRange = 0xf0;
     BYTES_EQUAL( 0x60, SHIFT_BITMASK(bitsToSet, bitmaskRange) );
+}
+
+
+
+TEST_GROUP(ShiftAndSetBitmask)
+{
+    uint8_t eightBit;
+    uint8_t bitsToSet;
+    uint8_t bitmaskRange;
+    uint8_t expected;
+
+    void setup()
+    {
+        eightBit = 0;
+        bitsToSet = 0;
+        bitmaskRange = 0;
+        expected = 0;
+    }
+
+    void teardown()
+    {
+    }
+
+};
+
+TEST(ShiftAndSetBitmask, SetNothing)
+{
+    bitsToSet    = B0000_0000;
+    bitmaskRange = B0000_0000;
+    expected     = B0000_0000;
+    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
+}
+
+TEST(ShiftAndSetBitmask, SetLeastSignifantBit)
+{
+    bitsToSet    = B0000_0001;
+    bitmaskRange = B0000_0001;
+    expected     = B0000_0001;
+    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
+}
+
+TEST(ShiftAndSetBitmask, SetMostSignifantBit)
+{
+    bitsToSet    = B0000_0001;
+    bitmaskRange = B1000_0000;
+    expected     = B1000_0000;
+    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
+}
+
+TEST(ShiftAndSetBitmask, SetSeveralBits)
+{
+    bitsToSet    = B0000_0011;
+    bitmaskRange = B0011_0000;
+    expected     = B0011_0000;
+    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
+}
+
+TEST(ShiftAndSetBitmask, SetNonConsecutiveBits)
+{
+    bitsToSet    = B0000_1001;
+    bitmaskRange = B1111_0000;
+    expected     = B1001_0000;
+    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
+}
+
+TEST(ShiftAndSetBitmask, DoNotAlterExistingBits)
+{
+    eightBit     = B1000_0001;
+    bitsToSet    = B0000_0011;
+    bitmaskRange = B0001_1000;
+    expected     = B1001_1001;
+    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
+}
+
+TEST(ShiftAndSetBitmask, DoNotSetBitsOutsideOfBitmaskRange)
+{
+    eightBit     = B0000_0000;
+    bitsToSet    = B0000_0011;
+    bitmaskRange = B0000_0001;
+    expected     = B0000_0001;
+    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
 }

@@ -26,6 +26,18 @@
 
 
 
+// This is complicated but very useful: :/
+//   First shift the bits to set into the bitmask range.
+//   Then filter the bits to set using a bitwise and.
+//   Then set the bits in the variable.
+// This is not a function so that we can avoid providing a specific data type for the arguments.
+#define SHIFT_AND_SET_BITMASK(variable, bitsToSet, bitmaskRange) \
+    ( SET_BITS(variable, \
+                BITWISE_AND(bitmaskRange, \
+                    SHIFT_BITMASK(bitsToSet, bitmaskRange))) )
+
+
+
 //Check if a single bit is set, given by a bitmask.
 //To check multiple bits, use IF_BITMASK.
 //Evaluates to 1 if true and 0 if false.
