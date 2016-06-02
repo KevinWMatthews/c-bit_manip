@@ -26,7 +26,7 @@ extern "C"
 
 
 
-TEST_GROUP(SetBits)
+TEST_GROUP(SetBitmask)
 {
     uint8_t eightBit;
 
@@ -40,34 +40,34 @@ TEST_GROUP(SetBits)
     }
 };
 
-TEST(SetBits, ItCanSetAllBitsInABitmask)
+TEST(SetBitmask, ItCanSetAllBitsInABitmask)
 {
-    SET_BITS(eightBit, EIGHT_BITS);
+    SET_BITMASK(eightBit, EIGHT_BITS);
     BYTES_EQUAL(EIGHT_BITS, eightBit);
 }
 
-TEST(SetBits, ItDoesNotClearAnyBitsInABitmask)
+TEST(SetBitmask, ItDoesNotClearAnyBitsInABitmask)
 {
     eightBit = 0xff;
-    SET_BITS(eightBit, 0x00);
+    SET_BITMASK(eightBit, 0x00);
     BYTES_EQUAL(0xff, eightBit);
 }
 
-TEST(SetBits, ItCanSetTheLeastSignificantBit)
+TEST(SetBitmask, ItCanSetTheLeastSignificantBit)
 {
-    SET_BITS( eightBit, (1<<0) );
+    SET_BITMASK( eightBit, (1<<0) );
     BYTES_EQUAL(0x01, eightBit);
 }
 
-TEST(SetBits, ItCanSetTheMostSignificantBit)
+TEST(SetBitmask, ItCanSetTheMostSignificantBit)
 {
-    SET_BITS( eightBit, (1<<7) );
+    SET_BITMASK( eightBit, (1<<7) );
     BYTES_EQUAL(0x80, eightBit);
 }
 
-// IGNORE_TEST(SetBits, ThereIsNoProtectionForThis)
+// IGNORE_TEST(SetBitmask, ThereIsNoProtectionForThis)
 // {
-    // SET_BITS( eightBit, (1<<8) );
+    // SET_BITMASK( eightBit, (1<<8) );
     // BYTES_EQUAL(0x00, eightBit);
 // }
 
@@ -112,7 +112,7 @@ TEST(ClearBits, ItCanClearTheMostSignificantBit)
     BYTES_EQUAL(0x7f, eightBit);
 }
 
-// IGNORE_TEST(SetBits, ThereIsNoProtectionForThis)
+// IGNORE_TEST(SetBitmask, ThereIsNoProtectionForThis)
 // {
 //     CLEAR_BITS( eightBit, (1<<8) );
 //     BYTES_EQUAL(0xff, eightBit);

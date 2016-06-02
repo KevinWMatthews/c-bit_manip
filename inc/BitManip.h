@@ -8,7 +8,7 @@
 
 // Set one or several bits given by a bitmask.
 // This macro will not clear bits.
-#define SET_BITS(variable, bitmask) ((variable) |= (bitmask))
+#define SET_BITMASK(variable, bitmask) ((variable) |= (bitmask))
 
 // Clear one or several bits given by a bitmask.
 // This macro will not set bits
@@ -32,7 +32,7 @@
 //   Then set the bits in the variable.
 // This is not a function so that we can avoid providing a specific data type for the arguments.
 #define SHIFT_AND_SET_BITMASK(variable, bitsToSet, bitmaskRange) \
-    ( SET_BITS(variable, \
+    ( SET_BITMASK(variable, \
                 BITWISE_AND(bitmaskRange, \
                     SHIFT_BITMASK(bitsToSet, bitmaskRange))) )
 
@@ -59,7 +59,7 @@
 #define SET_BITMASK_TO(variable, newValue, bitsToSet) \
 { \
   CLEAR_BITS(variable, bitsToSet); \
-  SET_BITS(variable, BITWISE_AND(newValue, bitsToSet)); \
+  SET_BITMASK(variable, BITWISE_AND(newValue, bitsToSet)); \
 }
 
 //Set and clear bits in variable so they match the new value
@@ -70,7 +70,7 @@
 #define SHIFT_AND_SET_BITMASK_TO(variable, newValue, bitsToSet) \
 { \
   CLEAR_BITS(variable, bitsToSet); \
-  SET_BITS(variable, BITWISE_AND((newValue) << RIGHTMOST_BIT_NUMBER(bitsToSet), bitsToSet)); \
+  SET_BITMASK(variable, BITWISE_AND((newValue) << RIGHTMOST_BIT_NUMBER(bitsToSet), bitsToSet)); \
 }
 
 
