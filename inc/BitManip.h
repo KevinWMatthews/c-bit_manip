@@ -14,6 +14,15 @@
 // This macro will not set bits
 #define CLEAR_BITMASK(variable, bitmask) ((variable) &= ~(bitmask))
 
+// Set AND clear bits in given by a bitmask
+#define SET_BITMASK_TO(variable, bitsToSet, bitmask) \
+{ \
+    CLEAR_BITMASK(variable, bitmask); \
+    SET_BITMASK(variable, FILTER_BITMASK(bitsToSet, bitmask)); \
+}
+
+
+
 // A wrapper for the standard bitwise and operation.
 // Filter out/unset bits that don't belong in a bitmask.
 // The filter and bitmask are actually interchangeable.
@@ -34,10 +43,11 @@
 //   Then filter the bits to set using a bitwise and.
 //   Then set the bits in the variable.
 // This is not a function so that we can avoid providing a specific data type for the arguments.
-#define SHIFT_AND_SET_BITMASK(variable, bitsToSet, bitmaskRange) \
-    ( SET_BITMASK(variable, \
-                FILTER_BITMASK(\
-                    SHIFT_BITMASK(bitsToSet, bitmaskRange), bitmaskRange)) )
+#define SHIFT_AND_SET_BITMASK_TO(variable, bitsToSet, bitmaskRange) \
+    { \
+      CLEAR_BITMASK(variable, bitmaskRange); \
+      SET_BITMASK(variable, \
+                FILTER_BITMASK( SHIFT_BITMASK(bitsToSet, bitmaskRange), bitmaskRange) ); }
 
 
 
@@ -57,25 +67,6 @@
 //Set a single bit given by a bit number.
 //This macro will not clear bits.
 #define SET_BIT_NUMBER(variable, bitNumber) ((variable) |= (1<<(bitNumber)))
-
-//Set and clear bits in variable so they match the new value
-#define SET_BITMASK_TO(variable, newValue, bitsToSet) \
-{ \
-  CLEAR_BITMASK(variable, bitsToSet); \
-  SET_BITMASK(variable, FILTER_BITMASK(newValue, bitsToSet)); \
-}
-
-//Set and clear bits in variable so they match the new value
-//Use this when the new value needs to be bit shifted.
-//For example, set the bits 4 to 7 to 0x55 with
-// SHIFT_AND_SET_BITMASK_TO(variable, 0x55, 0xf0)
-//Bitmask must be of consecutive bits!
-#define SHIFT_AND_SET_BITMASK_TO(variable, newValue, bitsToSet) \
-{ \
-  CLEAR_BITMASK(variable, bitsToSet); \
-  SET_BITMASK(variable, FILTER_BITMASK((newValue) << RIGHTMOST_BIT_NUMBER(bitsToSet), bitsToSet)); \
-}
-
 
 //Clear a single bit given by a bit number
 #define CLEAR_BIT_NUMBER(variable, bitNumber) ((variable) &= ~(1<<(bitNumber)))

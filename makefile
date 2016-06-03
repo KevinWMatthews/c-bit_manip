@@ -18,6 +18,7 @@ BUILD_DIR = build
 OBJECT_DIR = obj
 CPPUTEST_HOME = /usr/local
 
+CFLAGS += -Wfatal-errors
 INCLUDE_FLAGS = $(addprefix -I, $(INC_DIRS))
 TEST_INCLUDE_FLAGS = $(addprefix -I, $(TEST_DIRS))
 CPPFLAGS += -I$(CPPUTEST_HOME)/include
@@ -102,7 +103,7 @@ $(TARGET): $(SRC_OBJ) $(TEST_OBJ)
 # Compile test .cpp files
 $(OBJECT_DIR)/%.o: %.cpp
 	$(SILENCE)$(QUIET)mkdir -p $(dir $@)
-	$(SILENCE)$(CPP_COMPILER) $(DEP_FLAGS) -o $@ -c $< $(INCLUDE_FLAGS) $(TEST_INCLUDE_FLAGS)
+	$(SILENCE)$(CPP_COMPILER) $(DEP_FLAGS) -o $@ -c $< $(CFLAGS) $(INCLUDE_FLAGS) $(TEST_INCLUDE_FLAGS)
 
 # Compile source .c files
 $(OBJECT_DIR)/%.o: %.c

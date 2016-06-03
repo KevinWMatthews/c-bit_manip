@@ -15,7 +15,9 @@ extern "C"
 #define B0000_0000 0x00
 #define B0000_0001 0x01
 #define B0000_0011 0x03
+#define B0000_0101 0x05
 #define B0000_1001 0x09
+#define B0000_1111 0x0f
 #define B0001_1000 0x18
 #define B0011_0000 0x30
 #define B1000_0000 0x80
@@ -117,6 +119,35 @@ TEST(ClearBitmask, ItCanClearTheMostSignificantBit)
 //     CLEAR_BITMASK( eightBit, (1<<8) );
 //     BYTES_EQUAL(0xff, eightBit);
 // }
+
+
+
+TEST_GROUP(SetBitmaskTo)
+{
+    uint8_t eightBit;
+    uint8_t bitsToSet;
+    uint8_t bitmask;
+
+    void setup()
+    {
+        eightBit = 0;
+        bitsToSet = 0;
+        bitmask = 0;
+    }
+
+    void teardown()
+    {
+    }
+};
+
+TEST(SetBitmaskTo, ItClearsBitsWithinTheBitmask)
+{
+    eightBit  = 0x0f;
+    bitsToSet = 0x05;
+    bitmask   = 0x0f;
+    SET_BITMASK_TO(eightBit, bitsToSet, bitmask);
+    BYTES_EQUAL(0x05, eightBit);
+}
 
 
 
@@ -260,7 +291,7 @@ TEST(ShiftBitmask, ItCanShiftSomeBits)
 
 
 
-TEST_GROUP(ShiftAndSetBitmask)
+TEST_GROUP(ShiftAndSetBitmaskTo)
 {
     uint8_t eightBit;
     uint8_t bitsToSet;
@@ -278,70 +309,79 @@ TEST_GROUP(ShiftAndSetBitmask)
     void teardown()
     {
     }
-
 };
 
-TEST(ShiftAndSetBitmask, SetNothing)
+TEST(ShiftAndSetBitmaskTo, SetNothing)
 {
     bitsToSet    = B0000_0000;
     bitmaskRange = B0000_0000;
     expected     = B0000_0000;
-    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
     BYTES_EQUAL( expected, eightBit );
 }
 
-TEST(ShiftAndSetBitmask, SetLeastSignifantBit)
+TEST(ShiftAndSetBitmaskTo, SetLeastSignifantBit)
 {
     bitsToSet    = B0000_0001;
     bitmaskRange = B0000_0001;
     expected     = B0000_0001;
-    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
     BYTES_EQUAL( expected, eightBit );
 }
 
-TEST(ShiftAndSetBitmask, SetMostSignifantBit)
+TEST(ShiftAndSetBitmaskTo, SetMostSignifantBit)
 {
     bitsToSet    = B0000_0001;
     bitmaskRange = B1000_0000;
     expected     = B1000_0000;
-    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
     BYTES_EQUAL( expected, eightBit );
 }
 
-TEST(ShiftAndSetBitmask, SetSeveralBits)
+TEST(ShiftAndSetBitmaskTo, SetSeveralBits)
 {
     bitsToSet    = B0000_0011;
     bitmaskRange = B0011_0000;
     expected     = B0011_0000;
-    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
     BYTES_EQUAL( expected, eightBit );
 }
 
-TEST(ShiftAndSetBitmask, SetNonConsecutiveBits)
+TEST(ShiftAndSetBitmaskTo, SetNonConsecutiveBits)
 {
     bitsToSet    = B0000_1001;
     bitmaskRange = B1111_0000;
     expected     = B1001_0000;
-    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
     BYTES_EQUAL( expected, eightBit );
 }
 
-TEST(ShiftAndSetBitmask, DoNotAlterExistingBits)
+TEST(ShiftAndSetBitmaskTo, ClearBitsWithinBitmaskRange)
+{
+    eightBit     = B0000_1111;
+    bitsToSet    = B0000_0101;
+    bitmaskRange = B0000_1111;
+    expected     = B0000_0101;
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
+    BYTES_EQUAL( expected, eightBit );
+}
+
+TEST(ShiftAndSetBitmaskTo, DoNotAlterVariableOutsideOfBitmask)
 {
     eightBit     = B1000_0001;
     bitsToSet    = B0000_0011;
     bitmaskRange = B0001_1000;
     expected     = B1001_1001;
-    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
     BYTES_EQUAL( expected, eightBit );
 }
 
-TEST(ShiftAndSetBitmask, DoNotSetBitsOutsideOfBitmaskRange)
+TEST(ShiftAndSetBitmaskTo, DoNotSetBitsOutsideOfBitmaskRange)
 {
     eightBit     = B0000_0000;
     bitsToSet    = B0000_0011;
     bitmaskRange = B0000_0001;
     expected     = B0000_0001;
-    SHIFT_AND_SET_BITMASK(eightBit, bitsToSet, bitmaskRange);
+    SHIFT_AND_SET_BITMASK_TO(eightBit, bitsToSet, bitmaskRange);
     BYTES_EQUAL( expected, eightBit );
 }
